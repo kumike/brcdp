@@ -1,6 +1,29 @@
 import cups
 from xhtml2pdf import pisa
 from jinja2 import Template
+import argparse
+import barcode
+from barcode.writer import ImageWriter
+
+
+parser = argparse.ArgumentParser(description='A tutorial of argparse!')
+parser.add_argument("-p", action="store_true")
+parser.add_argument("-n", type=str, help="Номер штрихкода для печати")
+parser.add_argument("-c", type=int, help="Количество нужных копий штрихкода")
+#parser.add_argument("--text", type=str, help="Текст, подставится под кодом вместо цифр, небольше 24знаков")
+
+
+
+args = parser.parse_args()
+p = args.c
+
+p
+
+EAN = barcode.get_barcode_class('ean13')
+ean = EAN('123456789123',writer=ImageWriter)
+fname = ean.save('barcode')
+
+
 
 xhtml = '''<!DOCTYPE html>
 <html>
@@ -47,6 +70,11 @@ printer_name = list(printers.keys())[0]
 ##printer = conn.getDefault()
 ##print(printer)
 
-#conn.printFile(printer_name, 'print.pdf','',{})
+# Этим мы включаем печать
+def hwprintfile():
+    conn.printFile(printer_name, 'print.pdf','',{})
+    
+if p is True:
+    hwprintfile()
 
 
