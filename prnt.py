@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser(description='A tutorial of argparse!')
 parser.add_argument("-p", action="store_true")
 parser.add_argument("-n", type=str, help="Номер штрихкода для печати")
 parser.add_argument("-c", type=int, help="Количество нужных копий штрихкода")
-parser.add_argument("-f", type=str, default='html', help="Имя файла для сохранения,по умолчанию *.html, можно сохранить в *.pdf так -p pdf")
+parser.add_argument("-f", type=str, action="store",default='html',help="Имя файла для сохранения,по умолчанию *.html, можно сохранить в *.pdf так -p pdf")
 parser.add_argument("--text", type=str, help="Текст, подставится под кодом вместо цифр, небольше 24знаков")
 
 
@@ -19,21 +19,21 @@ p = args.p
 n = args.n
 c = args.c
 f = args.f
-text = args.text
+#text = args.text
 
 print('p = ',p)
 print('n = ',n)
 print('c = ',c)
 print('f = ',f)
-print('text = ',text)
+#print('text = ',text)
 
 if type(n) is None:
     exit() 
 else:
     print(len(n))
-    if len(n) != 12:
+    if len(n) != 3:
         print('Это блять нихуя ни EAN13 штрихкод! нужно токо 12 цифр! небольше неменьше!!!')
-        exit()
+    #    exit()
     else:
         print('ШтрихКот ok!')
 
@@ -59,9 +59,8 @@ xhtml = '''<!DOCTYPE html>
 </head>
 <body lang="ru-RU">'''
 
-stopA4 = 51
 i = 0
-while i <= 13: # это 13 рядов по 4 баркода, 13 строк какраз А4
+while i <= c: # это 13 рядов по 4 баркода, 13 строк какраз А4
     xhtml += '<table><tr><td><img src="barcode.png" width="167" height="88"></td>'+'\n'
     xhtml += '<td><img src="barcode.png" width="167" height="88" border="0"></td>'+'\n'
     xhtml += '<td><img src="barcode.png" width="167" height="88" border="0"></td>'+'\n'
