@@ -10,19 +10,21 @@ parser = argparse.ArgumentParser(description='A tutorial of argparse!')
 parser.add_argument("-p", action="store_true")
 parser.add_argument("-n", type=str, help="Номер штрихкода для печати")
 parser.add_argument("-c", type=int, help="Количество нужных копий штрихкода")
+parser.add_argument("-f", type=str, default='html', help="Имя файла для сохранения,по умолчанию *.html, можно сохранить в *.pdf так -p pdf")
 parser.add_argument("--text", type=str, help="Текст, подставится под кодом вместо цифр, небольше 24знаков")
-
 
 
 args = parser.parse_args()
 p = args.p
 n = args.n
 c = args.c
+f = args.f
 text = args.text
 
 print('p = ',p)
 print('n = ',n)
 print('c = ',c)
+print('f = ',f)
 print('text = ',text)
 
 if type(n) is None:
@@ -31,13 +33,14 @@ else:
     print(len(n))
     if len(n) != 12:
         print('Это блять нихуя ни EAN13 штрихкод! нужно токо 12 цифр! небольше неменьше!!!')
+        exit()
     else:
-        print('ok!')
+        print('ШтрихКот ok!')
 
 #EAN = barcode.get_barcode_class('ean13')
 #ean = EAN(u'123456789123',writer=ImageWriter())
 
-ean = barcode.get('ean13', u'209007770000', writer=ImageWriter())
+ean = barcode.get('ean13', n, writer=ImageWriter())
 ean.default_writer_options['text_distance'] = 2 
 ean.default_writer_options['font_size'] = 18
 ean.default_writer_options['quiet_zone'] = 6.5
@@ -66,8 +69,9 @@ while i <= 13: # это 13 рядов по 4 баркода, 13 строк ка�
     i += 1
 xhtml += '</body></html>'
 
-with open('barcode.html', 'w', encoding='utf-8') as f:
-    f.write(xhtml)
+if f == 'html':
+    with open('barcode.html', 'w', encoding='utf-8') as f:
+        f.write(xhtml)
 
 #print(xhtml)
 
