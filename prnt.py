@@ -19,19 +19,22 @@ p = args.p
 n = args.n
 c = args.c
 f = args.f
+text = args.text
 #text = args.text
 
 print('p = ',p)
 print('n = ',n)
 print('c = ',c)
 print('f = ',f)
+print('text = ',text)
+print('type text = ',type(text))
 #print('text = ',text)
 
 if type(n) is None:
     exit() 
 else:
     print(len(n))
-    if len(n) != 3:
+    if len(n) != 12:
         print('Это блять нихуя ни EAN13 штрихкод! нужно токо 12 цифр! небольше неменьше!!!')
     #    exit()
     else:
@@ -44,6 +47,11 @@ ean = barcode.get('ean13', n, writer=ImageWriter())
 ean.default_writer_options['text_distance'] = 2 
 ean.default_writer_options['font_size'] = 18
 ean.default_writer_options['quiet_zone'] = 6.5
+### почемуто пока не работает
+if text is not None:
+    ean.default_writer_options['write_text'] = True
+    ean.default_writer_options['text'] = text
+    print('text OK:',text)
 fname = ean.save('barcode')
 
 
@@ -59,15 +67,28 @@ xhtml = '''<!DOCTYPE html>
 </head>
 <body lang="ru-RU">'''
 
+xhtml += '<table><tr>'+'\n'
 i = 0
-while i <= c: # это 13 рядов по 4 баркода, 13 строк какраз А4
-    xhtml += '<table><tr><td><img src="barcode.png" width="167" height="88"></td>'+'\n'
-    xhtml += '<td><img src="barcode.png" width="167" height="88" border="0"></td>'+'\n'
-    xhtml += '<td><img src="barcode.png" width="167" height="88" border="0"></td>'+'\n'
-    xhtml += '<td><img src="barcode.png" width="167" height="88" border="0"></td></tr></table>'+'\n'
-    i += 1
+print(c)
+if c !=0:
+    while i != c: # это 13 рядов по 4 баркода, 13 строк какраз А4
+        if i <=6:
+            xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
+#        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
+#        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
+#        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
+#        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
+#        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
+            if i == 6:
+                xhtml += '<tr>'
+            i += 1
+else:
+    xhtml += '<td></td>'+'\n'
+
+xhtml += '</tr></table>'+'\n'
 xhtml += '</body></html>'
 
+### Сохраняем в хтмл 
 if f == 'html':
     with open('barcode.html', 'w', encoding='utf-8') as f:
         f.write(xhtml)
@@ -80,23 +101,24 @@ pdf = pisa.CreatePDF(xhtml, dest=resultfile)
 if not pdf.err:
     pdf.dest.close()
 
-try:
-    conn = cups.Connection()
-except RuntimeError:
-    exit()
-# Получаем список всех принтеров, подключенных к компьютеру
-printers = conn.getPrinters()
-for printer in printers: 
-# Выводим имя принтера в консоль
-    print(printer, printers[printer]["device-uri"])
-
-# Получаем первый принтер со списка принтеров
-printer_name = list(printers.keys())[0]
-##printer = conn.getDefault()
-##print(printer)
-
-# Этим мы включаем печать
+# Печать файла
 def hwprintfile():
+    try:
+        conn = cups.Connection()
+    except RuntimeError:
+        exit()
+    # Получаем список всех принтеров, подключенных к компьютеру
+    printers = conn.getPrinters()
+    for printer in printers: 
+        # Выводим имя принтера в консоль
+        print(printer, printers[printer]["device-uri"])
+
+    # Получаем первый принтер со списка принтеров
+    printer_name = list(printers.keys())[0]
+    ##printer = conn.getDefault()
+    ##print(printer)
+
+    # Этим мы включаем печать
     conn.printFile(printer_name, 'print.pdf','',{})
     
 if p is True:
