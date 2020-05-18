@@ -42,22 +42,26 @@ else:
 
 #EAN = barcode.get_barcode_class('ean13')
 #ean = EAN(u'123456789123',writer=ImageWriter())
+try:
+	ean = barcode.get('ean13', n, writer=ImageWriter())
+	ean.default_writer_options['text_distance'] = 2 
+	ean.default_writer_options['font_size'] = 18
+	ean.default_writer_options['quiet_zone'] = 6.5
+	### назначаем текст если опция тру
+	if text is not None:
+# зделать проверку на 23 чара .. больше низзя
+	    ean.default_writer_options['write_text'] = False 
+	    ean.default_writer_options['text'] = text
+	    if len(text) > 23:
+	    	print('Текста должно быть не больше 32 символа включая пробелы!!!')
+	    else:	
+	    	print('text OK:',text)
+	fname = ean.save('barcode')
 
-ean = barcode.get('ean13', n, writer=ImageWriter())
-ean.default_writer_options['text_distance'] = 2 
-ean.default_writer_options['font_size'] = 18
-ean.default_writer_options['quiet_zone'] = 6.5
-### почемуто пока не работает
-if text is not None:
-    ean.default_writer_options['write_text'] = True
-    ean.default_writer_options['text'] = text
-    print('text OK:',text)
-fname = ean.save('barcode')
+except barcode.errors.NumberOfDigitsError:
+	exit()
 
-
-
-xhtml = '''<!DOCTYPE html>
-<html>
+xhtml = '''<html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
         <title></title>
