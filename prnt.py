@@ -49,13 +49,12 @@ try:
 	ean.default_writer_options['quiet_zone'] = 6.5
 	### назначаем текст если опция тру
 	if text is not None:
-# зделать проверку на 23 чара .. больше низзя
 	    ean.default_writer_options['write_text'] = False 
 	    ean.default_writer_options['text'] = text
 	    if len(text) > 23:
-	    	print('Текста должно быть не больше 32 символа включая пробелы!!!')
-	    else:	
-	    	print('text OK:',text)
+	    	exit('Текста должно быть не больше 23 символа включая пробелы!!!')
+#	    else:	
+#	    	print('text OK:',text)
 	fname = ean.save('barcode')
 
 except barcode.errors.NumberOfDigitsError:
