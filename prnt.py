@@ -1,6 +1,6 @@
 import cups
 from xhtml2pdf import pisa
-from jinja2 import Template
+from jinja2 import Template  #https://qna.habr.com/q/518464
 import argparse
 import barcode
 from barcode.writer import ImageWriter
@@ -75,14 +75,14 @@ i = 0
 print(c)
 if c !=0:
     while i != c: # это 13 рядов по 4 баркода, 13 строк какраз А4
-        if i <=6:
-            xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
+        if i <=5:
+            xhtml += '<td><img src="barcode.png"></td>'+'\n'
 #        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
 #        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
 #        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
 #        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
 #        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
-            if i == 6:
+            if i == 5:
                 xhtml += '<tr>'
             i += 1
 else:
@@ -98,9 +98,9 @@ if f == 'html':
 
 #print(xhtml)
 
-outfilename = "print.pdf"
-resultfile = open(outfilename,'w+b')
-pdf = pisa.CreatePDF(xhtml, dest=resultfile)
+#outfilename = "print.pdf"
+#resultfile = open(outfilename,'w+b')
+pdf = pisa.CreatePDF(xhtml, dest=open('print.pdf','w+b'))
 if not pdf.err:
     pdf.dest.close()
 
