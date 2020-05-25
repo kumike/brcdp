@@ -47,6 +47,7 @@ try:
 	ean.default_writer_options['text_distance'] = 2 
 	ean.default_writer_options['font_size'] = 18
 	ean.default_writer_options['quiet_zone'] = 6.5
+#	ean.default_writer_options['background'] = 'red'
 	### назначаем текст если опция тру
 	if text is not None:
 	    ean.default_writer_options['write_text'] = False 
@@ -60,7 +61,8 @@ try:
 except barcode.errors.NumberOfDigitsError:
 	exit()
 
-xhtml = '''<html>
+xhtml = '''<!DOCTYPE html>
+<html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
         <title></title>
@@ -68,23 +70,23 @@ xhtml = '''<html>
         table {border: 1px solid black}
     </style>
 </head>
-<body lang="ru-RU">'''
+<body lang="ru-RU">
+<table><tr>'''+'\n'
 
-xhtml += '<table><tr>'+'\n'
 i = 0
 print(c)
 if c !=0:
     while i != c: # это 13 рядов по 4 баркода, 13 строк какраз А4
-        if i <=5:
-            xhtml += '<td><img src="barcode.png"></td>'+'\n'
+        if i < 5:
+            xhtml += '<td align="center" width="107" height="88"><img src="barcode.png" width="167" height="88"></td>'+'\n'
 #        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
 #        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
 #        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
 #        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
 #        xhtml += '<td><img src="barcode.png" width="167" height="88"></td>'+'\n'
-            if i == 5:
-                xhtml += '<tr>'
-            i += 1
+        elif i == 5:
+           xhtml += '<tr>'
+        i += 1
 else:
     xhtml += '<td></td>'+'\n'
 
