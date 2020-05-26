@@ -29,41 +29,39 @@ print('g = ',g)
 print('text = ',text)
 print('type text = ',type(text))
 
+def makecodes(*args):
+    sufix = 0
+    for i in args[0]:
+        try:
+            ean = barcode.get('ean13', str(i), writer=ImageWriter())
+            ean.default_writer_options['text_distance'] = 2 
+            ean.default_writer_options['font_size'] = 18
+            ean.default_writer_options['quiet_zone'] = 6.5
+           #ean.default_writer_options['background'] = 'red'
+            ### назначаем текст если опция тру
+            if text is not None:
+                ean.default_writer_options['write_text'] = False 
+                ean.default_writer_options['text'] = text
+                if len(text) > 23:
+                    exit('Текста должно быть не больше 23 символа включая пробелы!!!')
+            fname = ean.save('barcode0'+str(sufix))
+            sufix += 1
+        except barcode.errors.NumberOfDigitsError:
+                exit()
+        except barcode.errors.IllegalCharacterError:
+                exit('EAN13 штрихКот может содержать только цифрЫ!!не больше 12 знаков!!')
 
-
-def makecodes(n,c=0):
-    if type(n) is None or len(n) != 12:
-        exit('Это блять нихуя ни EAN13 штрихкод! нужно токо 12 цифр! небольше неменьше!!!')
-    try:
-        ean = barcode.get('ean13', n, writer=ImageWriter())
-        ean.default_writer_options['text_distance'] = 2 
-        ean.default_writer_options['font_size'] = 18
-        ean.default_writer_options['quiet_zone'] = 6.5
-#	ean.default_writer_options['background'] = 'red'
-        ### назначаем текст если опция тру
-        if text is not None:
-            ean.default_writer_options['write_text'] = False 
-            ean.default_writer_options['text'] = text
-            if len(text) > 23:
-                exit('Текста должно быть не больше 23 символа включая пробелы!!!')
-            fname = ean.save('barcode')
-    except barcode.errors.NumberOfDigitsError:
-            exit()
+if n is None: 
+    exit('Опция -n абязательна! бо шош мне бля генерировать?')
+elif len(n) != 12:
+    exit('Это блять нихуя ни EAN13 штрихкод! нужно токо 12 цифр! небольше неменьше!!!')
+else:
+    codelist = [n]
+    makecodes(codelist)
 
 if g is True:
-    gencodes = [209007770000+i for i in range(c)]
-    sufix = 0
-    for i in gencodes:
-        ean = barcode.get('ean13', str(i), writer=ImageWriter())
-        ean.default_writer_options['text_distance'] = 2 
-        ean.default_writer_options['font_size'] = 18
-        ean.default_writer_options['quiet_zone'] = 6.5
-        fname = ean.save('barcode0'+str(sufix))
-        sufix += 1
-#        makecodes(str(i),c)
-#        print(i)
-
-makecodes(n)
+    codelist = [int(n)+i for i in range(c)]
+    makecodes(codelist)
 
 ### Генерируем html разметку
 xhtml = '''<!DOCTYPE html>
@@ -95,25 +93,25 @@ for i in range(rowsc):
     else:
         cells = 5
     for ii in range(cells): ### 13 рядов по 4 кода = А4, width='167' в ряду 4шт, width='147' в ряду 5шт, 167 вроде читается лучше, width='167' height='88' 
+        xhtml += '    <td><img src="barcode0'+str(sufix)+'.png"></td>\n'
         if g is True:
-            xhtml += '    <td><img src="barcode0'+str(sufix)+'.png"></td>\n'
             sufix += 1
-        else:
-            xhtml += '    <td><img src="barcode.png"></td>\n'
     xhtml += '  </tr>\n'
+#xhtml += '<div><pdf:barcode value="BARCODE TEXT COMES HERE" type="code128" humanreadable="1" align="baseline" /></div></table>\n</body>\n</html>'
 xhtml += '</table>\n</body>\n</html>'
 
 ### Генерируем pdf из html разметки
 pdf = pisa.CreatePDF(xhtml, dest=open('print.pdf','w+b'))
 if not pdf.err:
     pdf.dest.close()
+#pisa.startViewer('print.pdf') ### пачимуто не работает :( not found..
 
-### Сохраняем в хтмл 
+### Сохраняем в хтмл TODO доделать толковое сохранение всей веб страницы и её ресурсов.
 if f == 'html':
     with open('barcode.html', 'w', encoding='utf-8') as f:
         f.write(xhtml)
 
-### Печать файла
+### Печать файла TODO доделать выбор принтера и по возможности печати в винде..
 def hwprintfile():
     try:
         conn = cups.Connection()
