@@ -21,8 +21,6 @@ f = args.f
 g = args.g
 text = args.text
 
-##
-
 print('p = ',p)
 print('n = ',n)
 print('c = ',c)
@@ -49,14 +47,12 @@ def makecodes(*args):
             fname = ean.save('barcode0'+str(sufix))
             sufix += 1
         except barcode.errors.NumberOfDigitsError:
-                exit()
+                exit('Это блять нихуя ни EAN13 штрихкод! нужно токо 12 цифр! небольше неменьше!!!')
         except barcode.errors.IllegalCharacterError:
                 exit('EAN13 штрихКот может содержать только цифрЫ!!не больше 12 знаков!!')
 
 if n is None: 
     exit('Опция -n абязательна! бо шош мне бля генерировать?')
-elif len(n) != 12:
-    exit('Это блять нихуя ни EAN13 штрихкод! нужно токо 12 цифр! небольше неменьше!!!')
 else:
     codelist = [n]
     makecodes(codelist)
