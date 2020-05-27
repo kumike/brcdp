@@ -21,6 +21,8 @@ f = args.f
 g = args.g
 text = args.text
 
+##
+
 print('p = ',p)
 print('n = ',n)
 print('c = ',c)
