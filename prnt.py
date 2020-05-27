@@ -2,6 +2,8 @@ import argparse
 import barcode
 from barcode.writer import ImageWriter
 from xhtml2pdf import pisa
+import os
+#import pisa ### патченная для запуска pdf и в линуксе.. было только для мака и винды.. дописал.. над автору заслать..
 import cups
 #from jinja2 import Template  #https://qna.habr.com/q/518464
 
@@ -10,16 +12,19 @@ parser.add_argument("-p", action="store_true", help="Печать штрихко
 parser.add_argument("-g", action="store_true", help="Генерация штрихкодов")
 parser.add_argument("-n", type=str, help="Номер штрихкода для печати")
 parser.add_argument("-c", type=int, help="Количество нужных копий штрихкода")
-parser.add_argument("-f", type=str, action="store",default='html',help="Имя файла для сохранения,по умолчанию *.html, можно сохранить в *.pdf так -p pdf")
+#parser.add_argument("-f", type=str, action="store",default='html',help="Имя файла для сохранения,по умолчанию *.html, можно сохранить в *.pdf так -p pdf")
 parser.add_argument("--text", type=str, help="Текст, подставится под кодом вместо цифр, небольше 24знаков")
+parser.add_argument("--view", action="store_true", help="Предпросмотр pdf, откроецца в просмотрщике по умолчанию")
 
 args = parser.parse_args()
 p = args.p
 n = args.n
 c = args.c
-f = args.f
+#f = args.f
+f = False
 g = args.g
 text = args.text
+view = args.view
 
 print('p = ',p)
 print('n = ',n)
@@ -57,7 +62,7 @@ else:
     codelist = [n]
     makecodes(codelist)
 
-if g is True:
+if g:
     codelist = [int(n)+i for i in range(c)]
     makecodes(codelist)
 
@@ -92,7 +97,7 @@ for i in range(rowsc):
         cells = 5
     for ii in range(cells): ### 13 рядов по 4 кода = А4, width='167' в ряду 4шт, width='147' в ряду 5шт, 167 вроде читается лучше, width='167' height='88' 
         xhtml += '    <td><img src="barcode0'+str(sufix)+'.png"></td>\n'
-        if g is True:
+        if g:
             sufix += 1
     xhtml += '  </tr>\n'
 #xhtml += '<div><pdf:barcode value="BARCODE TEXT COMES HERE" type="code128" humanreadable="1" align="baseline" /></div></table>\n</body>\n</html>'
@@ -102,7 +107,10 @@ xhtml += '</table>\n</body>\n</html>'
 pdf = pisa.CreatePDF(xhtml, dest=open('print.pdf','w+b'))
 if not pdf.err:
     pdf.dest.close()
-#pisa.startViewer('print.pdf') ### пачимуто не работает :( not found..
+
+if view:
+    os.system('xdg-open print.pdf')
+    #pisa.startViewer('print.pdf') ### заработало.. там не было написано для линя ток к маку и винде.. дописал.. заработало
 
 ### Сохраняем в хтмл TODO доделать толковое сохранение всей веб страницы и её ресурсов.
 if f == 'html':
