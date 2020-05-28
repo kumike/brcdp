@@ -150,11 +150,9 @@ def hwprintfile():
     else:
         printer_name = default_printer
 
-    #print(printer)
-
     ### Этим мы включаем печать
     conn.printFile(printer_name, 'print.pdf','',{})
-    print('Пэчатайу в этот принтер:', printer_name)
+    print('Пэчатайу в этот принтер:>>', printer_name)
     
 if p:
     hwprintfile()
