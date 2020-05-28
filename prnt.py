@@ -32,7 +32,6 @@ print('c = ',c)
 print('f = ',f)
 print('g = ',g)
 print('text = ',text)
-print('type text = ',type(text))
 
 def makecodes(*args):
     sufix = 0
@@ -63,8 +62,16 @@ else:
     makecodes(codelist)
 
 if g:
+    if c is None:
+        c = 70 ### 70 баркодов какраз страница А4 по 5 кодов в ряду
+    #if p is False:
+     #   p = True ###  и в принудиловку включаем печать если не включено при генерации кодов 
     codelist = [int(n)+i for i in range(c)]
     makecodes(codelist)
+
+### если не задано количество штрихкодов, то по умолчанию отпечатать ток один.
+if c is None:
+    c = 1
 
 ### Генерируем html разметку
 xhtml = '''<!DOCTYPE html>
@@ -109,6 +116,8 @@ if not pdf.err:
     pdf.dest.close()
 
 if view:
+    if p: ### если включен предпросмотр то выключаем печать в принудилку
+        p = False
     os.system('xdg-open print.pdf')
     #pisa.startViewer('print.pdf') ### заработало.. там не было написано для линя ток к маку и винде.. дописал.. заработало
 
@@ -123,19 +132,29 @@ def hwprintfile():
         conn = cups.Connection()
     except RuntimeError:
         exit()
-    ### Получаем список всех принтеров, подключенных к компьютеру
-    printers = conn.getPrinters()
-    for printer in printers: 
-        # Выводим имя принтера в консоль
-        print(printer, printers[printer]["device-uri"])
+           
+    ### Выводим имя принтера в консоль
+    #for printer in printers: 
+         #print(printer, printers[printer]["device-uri"])
+    
+    ### получаем принтер установленный по умолчанию.. его может и не быть установлено..
+    default_printer = conn.getDefault()
+    if default_printer is None:
+    	### Получаем список всех принтеров, подключенных к компьютеру
+        printers = conn.getPrinters()
+	    ### Получаем первый принтер со списка принтеров
+        if len(printers) > 0:
+            printer_name = list(printers.keys())[0]
+        else:
+            exit('Принтер блядь включи сначала!... бо нихуя нима принтера чёйто..')
+    else:
+        printer_name = default_printer
 
-    ### Получаем первый принтер со списка принтеров
-    printer_name = list(printers.keys())[0]
-    #printer = conn.getDefault()
     #print(printer)
 
     ### Этим мы включаем печать
     conn.printFile(printer_name, 'print.pdf','',{})
+    print('Пэчатайу в этот принтер:', printer_name)
     
-if p is True:
+if p:
     hwprintfile()
