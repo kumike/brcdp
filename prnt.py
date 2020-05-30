@@ -107,7 +107,6 @@ for i in range(rowsc):
         if g:
             sufix += 1
     xhtml += '  </tr>\n'
-#xhtml += '<div><pdf:barcode value="BARCODE TEXT COMES HERE" type="code128" humanreadable="1" align="baseline" /></div></table>\n</body>\n</html>'
 xhtml += '</table>\n</body>\n</html>'
 
 ### Генерируем pdf из html разметки
