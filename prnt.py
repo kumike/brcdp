@@ -47,16 +47,16 @@ def makecodes(*args):
                 ean.default_writer_options['write_text'] = False 
                 ean.default_writer_options['text'] = text
                 if len(text) > 23:
-                    exit('Текста должно быть не больше 23 символа включая пробелы!!!')
+                    exit('Текста должно быть не больше 23 символа включая пробелы!')
             fname = ean.save('barcode0'+str(sufix))
             sufix += 1
         except barcode.errors.NumberOfDigitsError:
-                exit('Это блять нихуя ни EAN13 штрихкод! нужно токо 12 цифр! небольше неменьше!!!')
+                exit('Это EAN13 штрихкод! нужно токо 12 цифр! небольше неменьше!')
         except barcode.errors.IllegalCharacterError:
-                exit('EAN13 штрихКот может содержать только цифрЫ!!не больше 12 знаков!!')
+                exit('EAN13 штрихкод может содержать только цифрЫ!!не больше 12 знаков!')
 
 if n is None: 
-    exit('Опция -n абязательна! бо шош мне бля генерировать?')
+    exit('Опция -n абязательна!')
 else:
     codelist = [n]
     makecodes(codelist)
@@ -145,13 +145,13 @@ def hwprintfile():
         if len(printers) > 0:
             printer_name = list(printers.keys())[0]
         else:
-            exit('Принтер блядь включи сначала!... бо нихуя нима принтера чёйто..')
+            exit('Принтер не обнаружен!')
     else:
         printer_name = default_printer
 
     ### Этим мы включаем печать
     conn.printFile(printer_name, 'print.pdf','',{})
-    print('Пэчатайу в этот принтер:>>', printer_name)
+    print('Пичатаю в этот принтер:>>', printer_name)
     
 if p:
     hwprintfile()
