@@ -1,0 +1,4 @@
+python-barcode[images]
+xhtml2pdf
+pycups
+
