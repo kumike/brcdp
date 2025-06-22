@@ -29,3 +29,36 @@ Python-скрипт для генерации штрихкодов, конвер
 ## 📜 Лицензия
 
 MIT — делай что хочешь, но не вини меня, если что-то сломается 😎
+
+## eng ##
+
+A Python script for generating barcodes, converting them to PDF, and sending to a printer via CUPS.
+
+## ⚙️  Dependencies
+
+This project uses the following libraries:
+
+- `python-barcode[images]` — for generating barcodes (in PNG and other formats)
+- `xhtml2pdf` — for generating PDF from HTML
+- `pycups` — for sending documents to printers via CUPS (Linux/macOS)
+
+## 📥 Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/kumike/brcdp.git
+   cd brcdp
+2. Create and activate a virtual environment:
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+
+3.  Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+
+📜 License
+
+MIT — do whatever you want, just don’t blame me if something breaks 😎
+
+
