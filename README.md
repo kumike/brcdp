@@ -15,8 +15,8 @@ Python-скрипт для генерации штрихкодов, конвер
 
 1. Клонируй репозиторий:
    ```bash
-   git clone https://github.com/yourusername/barcode-printer.git
-   cd barcode-printer
+   git clone https://github.com/kumike/brcdp.git
+   cd brcdp
 2. Создай и активируй виртуальное окружение:   
    ```bash
    python3 -m venv venv
